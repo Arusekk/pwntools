@@ -60,7 +60,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends -o Acquire::Retries=3 \
           ash bash-static dash ksh mksh zsh \
-          pandoc gdb gdbserver socat \
+          python3-rpyc \
+          gdb gdbserver socat \
           binutils-multiarch qemu-user-static \
           binutils-aarch64-linux-gnu \
           binutils-arm-linux-gnueabihf \
@@ -73,11 +74,6 @@ jobs:
           libc6-dbg \
           elfutils
       
-    - name: Install RPyC for GDB
-      run: |
-        sudo apt-get install -y python3-pip
-        /usr/bin/python3 -m pip install rpyc
-
     - name: Testing Corefiles
       run: |
         ulimit -a
@@ -95,7 +91,7 @@ jobs:
         pip install --upgrade pip
         pip install --upgrade wheel build
         pip install --upgrade flake8 appdirs
-        pip install --upgrade --editable .
+        pip install --upgrade .
 
     - name: Sanity checks
       run:  PWNLIB_NOTERM=1 python -bb -c 'from pwn import *; print(pwnlib.term.term_mode)'
@@ -104,6 +100,7 @@ jobs:
       run: pip install -r docs/requirements.txt
 
     - name: Manually install non-broken Unicorn
+      if:   matrix.python_version == '2.7'
       run:  pip install unicorn==2.0.0rc7
 
     - name: Disable yama ptrace_scope
