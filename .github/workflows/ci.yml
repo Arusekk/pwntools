@@ -38,9 +38,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y \
           python2.7 python2.7-dev python2-pip-whl
-        export PYTHONPATH=`echo /usr/share/python-wheels/pip-*py2*.whl`
-        sudo --preserve-env=PYTHONPATH python2.7 -m pip install --upgrade pip setuptools wheel
         sudo ln -sf python2.7 /usr/bin/python
+        export PYTHONPATH=`echo /usr/share/python-wheels/pip-*py2*.whl`
+        sudo --preserve-env=PYTHONPATH python -m pip install --upgrade pip setuptools wheel
+        sudo chown -R $USER /usr/local/lib/python2.7
+
 
     - name: Verify tag against version
       if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
@@ -91,7 +93,7 @@ jobs:
         pip install --upgrade pip
         pip install --upgrade wheel build
         pip install --upgrade flake8 appdirs
-        pip install --upgrade .
+        pip install --upgrade --editable .
 
     - name: Sanity checks
       run:  PWNLIB_NOTERM=1 python -bb -c 'from pwn import *; print(pwnlib.term.term_mode)'
