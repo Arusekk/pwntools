@@ -197,7 +197,7 @@ def debug_assembly(asm, gdbscript=None, vma=None, api=False):
 
     >>> assembly = shellcraft.echo("Hello world!\n")
     >>> io = gdb.debug_assembly(assembly)
-    >>> io.recvline()
+    >>> io.recvline()  # 1
     b'Hello world!\n'
     """
     tmp_elf = make_elf_from_assembly(asm, vma=vma, extract=False)
@@ -232,7 +232,7 @@ def debug_shellcode(data, gdbscript=None, vma=None, api=False):
     >>> assembly = shellcraft.echo("Hello world!\n")
     >>> shellcode = asm(assembly)
     >>> io = gdb.debug_shellcode(shellcode)
-    >>> io.recvline()
+    >>> io.recvline()  # 1
     b'Hello world!\n'
     """
     if isinstance(data, six.text_type):
@@ -427,7 +427,7 @@ def debug(args, gdbscript=None, exe=None, ssh=None, env=None, sysroot=None, api=
         Send a command to Bash
 
         >>> io.sendline(b"echo hello")
-        >>> io.recvline()
+        >>> io.recvline()  # 2
         b'hello\n'
 
         Interact with the process
@@ -451,7 +451,7 @@ def debug(args, gdbscript=None, exe=None, ssh=None, env=None, sysroot=None, api=
         Send a command to Bash
 
         >>> io.sendline(b"echo hello")
-        >>> io.recvline()
+        >>> io.recvline()  # 3
         b'hello\n'
 
         Interact with the process
@@ -483,7 +483,7 @@ def debug(args, gdbscript=None, exe=None, ssh=None, env=None, sysroot=None, api=
         Resume the program
 
         >>> io.gdb.continue_nowait()
-        >>> io.recvline()
+        >>> io.recvline()  # 4
         b'foo\n'
 
 
@@ -826,7 +826,7 @@ def attach(target, gdbscript = '', exe = None, gdb_args = None, ssh = None, sysr
         ... detach
         ... quit
         ... ''')
-        >>> io.recvline()
+        >>> io.recvline()  # 5
         b'Hello from process debugger!\n'
         >>> io.sendline(b'echo Hello from bash && exit')
         >>> io.recvall()
@@ -853,7 +853,7 @@ def attach(target, gdbscript = '', exe = None, gdb_args = None, ssh = None, sysr
 
             Observe the forced line
 
-            >>> io.recvline()
+            >>> io.recvline()  # 6
             b'Hello from process debugger!\n'
 
             Interact with the program in a regular way
@@ -877,7 +877,7 @@ def attach(target, gdbscript = '', exe = None, gdb_args = None, ssh = None, sysr
         ... detach
         ... quit
         ... ''')
-        >>> io.recvline()
+        >>> io.recvline()  # 7
         b'Hello from remote debugger!\n'
         >>> io.sendline(b'echo Hello from bash && exit')
         >>> io.recvall()
@@ -896,7 +896,7 @@ def attach(target, gdbscript = '', exe = None, gdb_args = None, ssh = None, sysr
         >>> io.recvline(timeout=5)  # doctest: +SKIP
         b'Hello from ssh debugger!\n'
         >>> io.sendline(b'This will be echoed back')
-        >>> io.recvline()
+        >>> io.recvline()  # 8
         b'This will be echoed back\n'
         >>> io.close()
     """
