@@ -52,6 +52,8 @@ Example:
 """
 from __future__ import absolute_import
 
+import six
+
 import importlib
 import sys
 from types import ModuleType
@@ -106,6 +108,9 @@ class ConstantsModule(ModuleType):
                 mod = ConstantsModule(mod.__name__, mod)
                 setattr(self, key, mod)
                 sys.modules[mod.__name__] = mod
+                for k, v in mod.__dict__.items():
+                    if isinstance(v, six.integer_types):
+                        mod.__dict__[k] = Constant(k, v)
                 return mod
             except ImportError:
                 pass
